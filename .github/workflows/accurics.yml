@@ -42,6 +42,8 @@ jobs:
           env-id: ${{ secrets.ACCURICS_ENV_ID }}
           # Specify the location to the repository
           repo: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY
+          scan-mode: "scan"
+          pipeline: true
           # Fail the build when violations are found:
           fail-on-violations: true
           # Fail the build on all errors
