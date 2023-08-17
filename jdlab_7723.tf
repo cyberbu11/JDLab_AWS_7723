@@ -102,3 +102,27 @@ resource "aws_eip" "prod_suse_server001" {
     "Name"      = "prod_suse_server001_eip"
   }
 }
+
+#########################################################
+# S3 Bucket
+#########################################################
+resource "aws_s3_bucket" "jdlab_ps_workshop_s3_001" {
+  bucket = "jdlab-ps-workshop-s3-001-20230816"
+
+  tags = {
+    "Name"      = "jdlab-ps-workshop-s3-001-20230816"
+    "Terraform" = "true"
+  }
+}
+
+# resource "aws_s3_bucket_acl" "jdlab_ps_workshop_s3_001_acl" {
+#   bucket = aws_s3_bucket.jdlab_ps_workshop_s3_001.id
+#   acl    = "private"
+# }
+
+resource "aws_s3_bucket_versioning" "jdlab_ps_workshop_s3_001_versioning" {
+  bucket = aws_s3_bucket.jdlab_ps_workshop_s3_001.id
+  versioning_configuration {
+    status = "Disabled"
+  }
+}
