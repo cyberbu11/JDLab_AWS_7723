@@ -92,6 +92,7 @@ resource "aws_instance" "prod_suse_server001" {
     http_endpoint = "disabled"
     http_tokens   = "required"
   }
+  monitoring = true
 }
 
 resource "aws_eip" "prod_suse_server001" {

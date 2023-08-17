@@ -1,0 +1,51 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Accurics Scan
+        uses: accurics/accurics-action@v1.3
+        id: accurics
+        env:
+          # Credentials are required by Terraform. They can be specified using any method that Terraform accepts
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          REPO_URL: ${{ github.repositoryUrl }}
+        with:
+          # A specific Terraform version can be chosen (default=latest)
+          terraform-version: 0.14.7
+          # Specify any Terraform plan args here. Variables can be specified as follows (enclosed in single quotes)
+          plan-args: '-var public_key_path=terraform-poc01.pub -var key_name=terraform-poc01'
+          # Specify the ENV_ID and APP_ID from the config file
+          app-id: ${{ secrets.ACCURICS_APP_ID }}
+          env-id: ${{ secrets.ACCURICS_ENV_ID }}
+          # Specify the location to the repository
+          repo: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY
+          scan-mode: "scan"
+          pipeline: true
+          # Fail the build when violations are found:
+          fail-on-violations: true
+          # Fail the build on all errors
+          fail-on-all-errors: false
+      
